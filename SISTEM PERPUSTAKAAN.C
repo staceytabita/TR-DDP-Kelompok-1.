@@ -4,7 +4,6 @@
 
 #define MAX 100
 
-// ======== STRUCT DATA ========
 struct Buku {
     char kode[10];
     char judul[50];
@@ -27,7 +26,6 @@ struct RiwayatKembali {
     int denda;
 };
 
-// ======== FUNGSI BERSIH DAN PAUSE ========
 void clear() {
 #ifdef _WIN32
     system("cls");
@@ -41,7 +39,6 @@ void pause() {
     getchar();
 }
 
-// ======== SIMPAN & MUAT FILE ========
 void simpanRiwayatPinjam(struct RiwayatPinjam logPinjam[], int jumlahPinjam) {
     FILE *fp = fopen("riwayat_pinjam.txt", "w");
     if (fp == NULL) return;
@@ -92,7 +89,6 @@ void muatRiwayatKembali(struct RiwayatKembali logKembali[], int *jumlahKembali) 
     fclose(fp);
 }
 
-// ======== PROGRAM UTAMA ========
 int main() {
     struct Buku daftar[MAX];
     struct RiwayatPinjam logPinjam[MAX];
