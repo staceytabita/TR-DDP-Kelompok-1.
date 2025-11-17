@@ -26,6 +26,7 @@ struct RiwayatKembali {
     int denda;
 };
 
+
 void clear() {
 #ifdef _WIN32
     system("cls");
@@ -38,6 +39,7 @@ void pause() {
     printf("\nTekan Enter untuk melanjutkan...");
     getchar();
 }
+
 
 void simpanRiwayatPinjam(struct RiwayatPinjam logPinjam[], int jumlahPinjam) {
     FILE *fp = fopen("riwayat_pinjam.txt", "w");
@@ -89,6 +91,7 @@ void muatRiwayatKembali(struct RiwayatKembali logKembali[], int *jumlahKembali) 
     fclose(fp);
 }
 
+
 int main() {
     struct Buku daftar[MAX];
     struct RiwayatPinjam logPinjam[MAX];
@@ -105,6 +108,7 @@ int main() {
 
     do {
         clear();
+        system("color 17");
         printf("=== SISTEM PERPUSTAKAAN ===\n");
         printf("1. Data Buku\n");
         printf("2. Peminjaman\n");
@@ -115,8 +119,9 @@ int main() {
         getchar();
 
         switch (menu) {
-        case 1: // Data Buku
+        case 1:
             clear();
+            system("color 57");
             printf("=== DATA BUKU ===\n");
             printf("1. Tambah Buku\n");
             printf("2. Lihat Buku\n");
@@ -165,8 +170,9 @@ int main() {
             }
             break;
 
-        case 2: // Peminjaman
+        case 2:
             clear();
+            system("color 57");
             printf("=== MENU PEMINJAMAN ===\n");
             printf("1. Pinjam Buku\n");
             printf("2. Lihat Riwayat Peminjaman\n");
@@ -229,8 +235,9 @@ int main() {
             }
             break;
 
-        case 3: // Pengembalian
+        case 3:
             clear();
+            system("color 57");
             printf("=== MENU PENGEMBALIAN ===\n");
             printf("1. Kembalikan Buku\n");
             printf("2. Lihat Riwayat Pengembalian\n");
