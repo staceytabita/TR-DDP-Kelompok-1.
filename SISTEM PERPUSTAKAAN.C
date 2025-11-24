@@ -6,7 +6,9 @@
 
 struct Buku {
     char kode[10];
-    char judul[50];
+    char judul[50]
+
+    ;
     char pengarang[30];
     int stok;
     int dipinjam;
@@ -14,6 +16,7 @@ struct Buku {
 };
 
 struct RiwayatPinjam {
+
     char kode[10];
     char judul[50];
     char namaPeminjam[30];
@@ -40,6 +43,53 @@ void pause() {
     getchar();
 }
 
+
+
+
+void simpanDataBuku(struct Buku daftar[], int jumlah) {
+    FILE *fp = fopen("buku.txt", "w");
+    if (fp == NULL) {
+        printf("Gagal membuka file untuk menyimpan.\n");
+        return;
+    }
+
+    for (int i = 0; i < jumlah; i++) {
+        fprintf(fp, "%s|%s|%s|%d|%d|%s\n",
+                daftar[i].kode,
+                daftar[i].judul,
+                daftar[i].pengarang,
+                daftar[i].stok,
+                daftar[i].dipinjam,
+                strlen(daftar[i].namaPeminjam) == 0 ? "-" : daftar[i].namaPeminjam);
+    }
+
+    fclose(fp);
+}
+
+void muatDataBuku(struct Buku daftar[], int *jumlah) {
+    FILE *fp = fopen("buku.txt", "r");
+    if (fp == NULL) {
+        printf("Belum ada file buku.txt.\n");
+        return;
+    }
+
+    *jumlah = 0;
+    while (fscanf(fp, "%[^|]|%[^|]|%[^|]|%d|%d|%[^\n]\n",
+                  daftar[*jumlah].kode,
+                  daftar[*jumlah].judul,
+                  daftar[*jumlah].pengarang,
+                  &daftar[*jumlah].stok,
+                  &daftar[*jumlah].dipinjam,
+                  daftar[*jumlah].namaPeminjam) == 6) {
+
+        if (strcmp(daftar[*jumlah].namaPeminjam, "-") == 0)
+            daftar[*jumlah].namaPeminjam[0] = '\0';
+
+        (*jumlah)++;
+    }
+
+    fclose(fp);
+}
 
 void simpanRiwayatPinjam(struct RiwayatPinjam logPinjam[], int jumlahPinjam) {
     FILE *fp = fopen("riwayat_pinjam.txt", "w");
@@ -100,6 +150,7 @@ int main() {
     int jumlahPinjam = 0;
     int jumlahKembali = 0;
 
+    muatDataBuku(daftar, &jumlah);
     muatRiwayatPinjam(logPinjam, &jumlahPinjam);
     muatRiwayatKembali(logKembali, &jumlahKembali);
 
@@ -145,6 +196,8 @@ int main() {
                 getchar();
                 daftar[jumlah].dipinjam = 0;
                 jumlah++;
+            simpanDataBuku(daftar, jumlah);
+
                 printf("\nBuku berhasil ditambahkan!\n");
                 pause();
             } else if (pilihanSub == 2) {
