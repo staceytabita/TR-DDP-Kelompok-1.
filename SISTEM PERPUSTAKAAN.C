@@ -1,14 +1,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <windows.h>
+
 
 #define MAX 100
 
 struct Buku {
     char kode[10];
-    char judul[50]
-
-    ;
+    char judul[50];
     char pengarang[30];
     int stok;
     int dipinjam;
@@ -91,6 +91,16 @@ void muatDataBuku(struct Buku daftar[], int *jumlah) {
     fclose(fp);
 }
 
+void hapusDataBuku() {
+    FILE *file = fopen("buku.txt", "w");
+    if (file == NULL) {
+        printf("File tidak bisa dibuka!\n");
+        return;
+    }
+    fclose(file);
+    printf("Riwayat Buku berhasil dihapus!\n");
+}
+
 void simpanRiwayatPinjam(struct RiwayatPinjam logPinjam[], int jumlahPinjam) {
     FILE *fp = fopen("riwayat_pinjam.txt", "w");
     if (fp == NULL) return;
@@ -113,6 +123,16 @@ void muatRiwayatPinjam(struct RiwayatPinjam logPinjam[], int *jumlahPinjam) {
         (*jumlahPinjam)++;
     }
     fclose(fp);
+}
+
+void hapusDataPeminjaman() {
+    FILE *file = fopen("riwayat_kembali.txt", "w");
+    if (file == NULL) {
+        printf("File tidak bisa dibuka!\n");
+        return;
+    }
+    fclose(file);
+    printf("Riwayat peminjaman berhasil dihapus!\n");
 }
 
 void simpanRiwayatKembali(struct RiwayatKembali logKembali[], int jumlahKembali) {
@@ -139,6 +159,28 @@ void muatRiwayatKembali(struct RiwayatKembali logKembali[], int *jumlahKembali) 
         (*jumlahKembali)++;
     }
     fclose(fp);
+}
+
+void hapusRiwayatKembali() {
+    FILE *file = fopen("riwayat_kembali.txt", "w");
+    if (file == NULL) {
+        printf("File tidak bisa dibuka!\n");
+        return;
+    }
+    fclose(file);
+    printf("Riwayat Pengembalian berhasil dihapus!\n");
+
+}
+
+
+void loadingSimple() {
+    printf("Loading");
+    for (int i = 0; i < 5; i++) {
+        printf(".");
+        fflush(stdout);
+        Sleep(100);
+    }
+    printf("\n");
 }
 
 
@@ -170,58 +212,75 @@ int main() {
         getchar();
 
         switch (menu) {
-        case 1:
-            clear();
-            system("color 57");
-            printf("=== DATA BUKU ===\n");
-            printf("1. Tambah Buku\n");
-            printf("2. Lihat Buku\n");
-            printf("Pilih: ");
-            scanf("%d", &pilihanSub);
-            getchar();
+       case 1:
+    clear();
+    system("color 57");
+    printf("=== DATA BUKU ===\n");
+    printf("1. Tambah Buku\n");
+    printf("2. Lihat Buku\n");
+    printf("3. Hapus Buku\n");
+    printf("4. Kembali\n");
+    printf("Pilih: ");
+    scanf("%d", &pilihanSub);
+    getchar();
 
-            if (pilihanSub == 1) {
-                clear();
-                printf("Masukkan Kode Buku: ");
-                scanf("%s", daftar[jumlah].kode);
-                getchar();
-                printf("Masukkan Judul Buku: ");
-                fgets(daftar[jumlah].judul, sizeof(daftar[jumlah].judul), stdin);
-                daftar[jumlah].judul[strcspn(daftar[jumlah].judul, "\n")] = 0;
-                printf("Masukkan Nama Pengarang: ");
-                fgets(daftar[jumlah].pengarang, sizeof(daftar[jumlah].pengarang), stdin);
-                daftar[jumlah].pengarang[strcspn(daftar[jumlah].pengarang, "\n")] = 0;
-                printf("Masukkan Stok: ");
-                scanf("%d", &daftar[jumlah].stok);
-                getchar();
-                daftar[jumlah].dipinjam = 0;
-                jumlah++;
-            simpanDataBuku(daftar, jumlah);
+     if (pilihanSub == 4) break;
 
-                printf("\nBuku berhasil ditambahkan!\n");
-                pause();
-            } else if (pilihanSub == 2) {
-                clear();
-                printf("=== DAFTAR BUKU ===\n\n");
-                if (jumlah == 0)
-                    printf("Belum ada buku.\n");
-                else {
-                    printf("-------------------------------------------------------------\n");
-                    printf("| %-10s | %-25s | %-15s | %-5s |\n",
-                           "Kode", "Judul", "Pengarang", "Stok");
-                    printf("-------------------------------------------------------------\n");
-                    for (int i = 0; i < jumlah; i++) {
-                        printf("| %-10s | %-25s | %-15s | %-5d |\n",
-                               daftar[i].kode,
-                               daftar[i].judul,
-                               daftar[i].pengarang,
-                               daftar[i].stok);
-                    }
-                    printf("-------------------------------------------------------------\n");
-                }
-                pause();
+    if (pilihanSub == 1) {
+        clear();
+        printf("Masukkan Kode Buku: ");
+        scanf("%s", daftar[jumlah].kode);
+        getchar();
+        printf("Masukkan Judul Buku: ");
+        fgets(daftar[jumlah].judul, sizeof(daftar[jumlah].judul), stdin);
+        daftar[jumlah].judul[strcspn(daftar[jumlah].judul, "\n")] = 0;
+        printf("Masukkan Nama Pengarang: ");
+        fgets(daftar[jumlah].pengarang, sizeof(daftar[jumlah].pengarang), stdin);
+        daftar[jumlah].pengarang[strcspn(daftar[jumlah].pengarang, "\n")] = 0;
+        printf("Masukkan Stok: ");
+        scanf("%d", &daftar[jumlah].stok);
+        getchar();
+        daftar[jumlah].dipinjam = 0;
+
+        jumlah++;
+        simpanDataBuku(daftar, jumlah);
+
+        printf("\nBuku berhasil ditambahkan!\n");
+        pause();
+
+    } else if (pilihanSub == 2) {
+        clear();
+        printf("=== DAFTAR BUKU ===\n\n");
+
+        if (jumlah == 0)
+            printf("Belum ada buku.\n");
+        else {
+            printf("-------------------------------------------------------------\n");
+            printf("| %-10s | %-25s | %-15s | %-5s |\n",
+                   "Kode", "Judul", "Pengarang", "Stok");
+            printf("-------------------------------------------------------------\n");
+
+            for (int i = 0; i < jumlah; i++) {
+                printf("| %-10s | %-25s | %-15s | %-5d |\n",
+                       daftar[i].kode,
+                       daftar[i].judul,
+                       daftar[i].pengarang,
+                       daftar[i].stok);
             }
-            break;
+
+            printf("-------------------------------------------------------------\n");
+        }
+        pause();
+
+    } else if (pilihanSub == 3) {
+        clear();
+        hapusDataBuku();
+        jumlah = 0;
+        pause();
+    }
+
+    break;
+
 
         case 2:
             clear();
@@ -229,9 +288,13 @@ int main() {
             printf("=== MENU PEMINJAMAN ===\n");
             printf("1. Pinjam Buku\n");
             printf("2. Lihat Riwayat Peminjaman\n");
+            printf("3. Hapus Peminjaman\n");
+            printf("4. Kembali\n");
             printf("Pilih: ");
             scanf("%d", &pilihanSub);
             getchar();
+
+            if (pilihanSub == 4) break;
 
             if (pilihanSub == 1) {
                 clear();
@@ -285,8 +348,15 @@ int main() {
                     printf("---------------------------------------------------------------\n");
                 }
                 pause();
-            }
-            break;
+
+                }   else if (pilihanSub == 3) {
+                    clear();
+                    hapusDataPeminjaman();
+                    jumlahPinjam = 0;
+                    pause();
+                }
+
+                break;
 
         case 3:
             clear();
@@ -294,9 +364,13 @@ int main() {
             printf("=== MENU PENGEMBALIAN ===\n");
             printf("1. Kembalikan Buku\n");
             printf("2. Lihat Riwayat Pengembalian\n");
+            printf("3. Hapus Pengembalian\n");
+            printf("4. Kembali\n");
             printf("Pilih: ");
             scanf("%d", &pilihanSub);
             getchar();
+
+            if (pilihanSub == 4) break;
 
             if (pilihanSub == 1) {
                 clear();
@@ -353,6 +427,12 @@ int main() {
                     printf("---------------------------------------------------------------------------------\n");
                 }
                 pause();
+
+                }else if (pilihanSub == 3) {
+                    clear();
+                    hapusDataPeminjaman();
+                    jumlahPinjam = 0;
+                    pause();
             }
             break;
         }
