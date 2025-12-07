@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Perpustakaan Digital</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        :root {
+    --primary-color: #007bff;
+    --secondary-color: #f8f9fa;
+    --text-color: #333;
+    --border-color: #ddd;
+    --sidebar-bg: #343a40;
+    --sidebar-text: #fff;
+    --success-color: #28a745;
+    --error-color: #dc3545;
+    --font-family: 'Roboto', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    font-family: var(--font-family);
+    color: var(--text-color);
+    background-image: url('https://images.unsplash.com/photo-1568667256549-094345857637?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+
+.sidebar {
+    width: 260px;
+    background-color: rgba(52, 58, 64, 0.9);
+    color: var(--sidebar-text);
+    padding: 20px;
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-header h2 {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.sidebar-menu {
+    list-style: none;
+}
+
+.sidebar-menu li {
+    margin-bottom: 10px;
+}
+
+.sidebar-menu .menu-link {
+    display: block;
+    padding: 12px 15px;
+    color: var(--sidebar-text);
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.sidebar-menu .menu-link:hover,
+.sidebar-menu .menu-link.active {
+    background-color: var(--primary-color);
+}
+
+
+.main-content {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+    background-color: rgba(255, 255, 255, 0.75);
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.content-view {
+    display: none;
+}
+
+.content-view.active {
+    display: block;
+}
+
+.view-header h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+}
+
+
+.tab-nav {
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s;
+}
+
+.tab-btn.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+
+.form-card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+    max-width: 500px;
+}
+
+.form-card h3 {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+
+.btn-danger {
+    background-color: var(--error-color);
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+
+.table-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+    overflow-x: auto;
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+.table-container h3 {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+table {
+    max-width: 800px;
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+thead {
+    background-color: var(--secondary-color);
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 5px;
+    color: white;
+    font-weight: 500;
+    transform: translateX(400px);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.success {
+    background-color: var(--success-color);
+}
+
+.notification.error {
+    background-color: var(--error-color);
+}
+    </style>
+    
+</head>
+<body>
+
+    <div class="container" >
+    
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>📚 Sistem Perpustakaan</h2>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="#" class="menu-link active" data-target="data-buku">1. Data Buku</a></li>
+                <li><a href="#" class="menu-link" data-target="peminjaman">2. Peminjaman</a></li>
+                <li><a href="#" class="menu-link" data-target="pengembalian">3. Pengembalian</a></li>
+            </ul>
+        </aside>
+
+        
+        <main class="main-content">
+            
+           
+            <section id="data-buku" class="content-view active">
+                <div class="view-header">
+                    <h1>Data Buku</h1>
+                </div>
+                
+               
+                <div class="tab-nav">
+                    <button class="tab-btn active" data-tab="tambah-buku-tab">1. Tambah Buku</button>
+                    <button class="tab-btn" data-tab="lihat-buku-tab">2. Lihat Buku</button>
+                </div>
+
+               
+                <div id="tambah-buku-tab" class="tab-content active">
+                    <form id="form-tambah-buku" class="form-card">
+                        <h3>Tambah Buku Baru</h3>
+                        <div class="form-group">
+                            <label for="kode-buku">Kode Buku</label>
+                            <input type="text" id="kode-buku" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="judul-buku">Judul Buku</label>
+                            <input type="text" id="judul-buku" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="pengarang-buku">Pengarang</label>
+                            <input type="text" id="pengarang-buku" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="stok-buku">Stok</label>
+                            <input type="number" id="stok-buku" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Simpan Buku</button>
+                    </form>
+                </div>
+
+                
+                <div id="lihat-buku-tab" class="tab-content">
+                    <div class="table-container">
+                        <h3>Daftar Buku</h3>
+                        <table id="tabel-buku">
+                            <thead>
+                                <tr>
+                                    <th>Kode</th>
+                                    <th>Judul</th>
+                                    <th>Pengarang</th>
+                                    <th>Stok</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                               
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+           
+            <section id="peminjaman" class="content-view">
+                <div class="view-header">
+                    <h1>Peminjaman</h1>
+                </div>
+
+                <div class="tab-nav">
+                    <button class="tab-btn active" data-tab="pinjam-buku-tab">1. Pinjam Buku</button>
+                    <button class="tab-btn" data-tab="riwayat-pinjam-tab">2. Lihat Riwayat Peminjaman</button>
+                </div>
+
+                <div id="pinjam-buku-tab" class="tab-content active">
+                    <form id="form-pinjam-buku" class="form-card">
+                        <h3>Form Peminjaman Buku</h3>
+                        <div class="form-group">
+                            <label for="kode-pinjam">Kode Buku</label>
+                            <input type="text" id="kode-pinjam" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nama-peminjam">Nama Peminjam</label>
+                            <input type="text" id="nama-peminjam" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Proses Peminjaman</button>
+                    </form>
+                </div>
+
+                <div id="riwayat-pinjam-tab" class="tab-content">
+                    <div class="table-container">
+                        <h3>Riwayat Peminjaman</h3>
+                        <table id="tabel-riwayat-pinjam">
+                            <thead>
+                                <tr>
+                                    <th>Kode</th>
+                                    <th>Judul</th>
+                                    <th>Nama Peminjam</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+           
+            <section id="pengembalian" class="content-view">
+                <div class="view-header">
+                    <h1>Pengembalian</h1>
+                </div>
+
+                <div class="tab-nav">
+                    <button class="tab-btn active" data-tab="kembalikan-buku-tab">1. Kembalikan Buku</button>
+                    <button class="tab-btn" data-tab="riwayat-kembali-tab">2. Lihat Riwayat Pengembalian</button>
+                </div>
+
+                <div id="kembalikan-buku-tab" class="tab-content active">
+                    <form id="form-kembalikan-buku" class="form-card">
+                        <h3>Form Pengembalian Buku</h3>
+                        <div class="form-group">
+                            <label for="kode-kembali">Kode Buku</label>
+                            <input type="text" id="kode-kembali" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="hari-terlambat">Jumlah Hari Terlambat (0 jika tepat waktu)</label>
+                            <input type="number" id="hari-terlambat" value="0" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Proses Pengembalian</button>
+                    </form>
+                </div>
+
+                <div id="riwayat-kembali-tab" class="tab-content">
+                    <div class="table-container">
+                        <h3>Riwayat Pengembalian</h3>
+                        <table id="tabel-riwayat-kembali">
+                            <thead>
+                                <tr>
+                                    <th>Kode</th>
+                                    <th>Judul</th>
+                                    <th>Terlambat (hari)</th>
+                                    <th>Denda (Rp)</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                               
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    
+    <div id="notification" class="notification"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    const menuLinks = document.querySelectorAll('.menu-link');
+    const contentViews = document.querySelectorAll('.content-view');
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    const notification = document.getElementById('notification');
+
+    
+    const formTambahBuku = document.getElementById('form-tambah-buku');
+    const formPinjamBuku = document.getElementById('form-pinjam-buku');
+    const formKembalikanBuku = document.getElementById('form-kembalikan-buku');
+
+   
+    const tabelBukuBody = document.querySelector('#tabel-buku tbody');
+    const tabelRiwayatPinjamBody = document.querySelector('#tabel-riwayat-pinjam tbody');
+    const tabelRiwayatKembaliBody = document.querySelector('#tabel-riwayat-kembali tbody');
+
+   
+    let daftarBuku = JSON.parse(localStorage.getItem('daftarBuku')) || [];
+    let riwayatPinjam = JSON.parse(localStorage.getItem('riwayatPinjam')) || [];
+    let riwayatKembali = JSON.parse(localStorage.getItem('riwayatKembali')) || [];
+
+    
+
+    function showNotification(message, type = 'success') {
+        notification.textContent = message;
+        notification.className = `notification ${type} show`;
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 3000);
+    }
+
+    function simpanData() {
+        localStorage.setItem('daftarBuku', JSON.stringify(daftarBuku));
+        localStorage.setItem('riwayatPinjam', JSON.stringify(riwayatPinjam));
+        localStorage.setItem('riwayatKembali', JSON.stringify(riwayatKembali));
+    }
+
+    function renderTabelBuku() {
+        tabelBukuBody.innerHTML = '';
+        if (daftarBuku.length === 0) {
+            tabelBukuBody.innerHTML = '<tr><td colspan="5">Belum ada data buku.</td></tr>';
+            return;
+        }
+        daftarBuku.forEach(buku => {
+            const row = tabelBukuBody.insertRow();
+            row.innerHTML = `
+                <td>${buku.kode}</td>
+                <td>${buku.judul}</td>
+                <td>${buku.pengarang}</td>
+                <td>${buku.stok}</td>
+                <td>
+                    <button class="btn btn-danger btn-hapus" data-kode="${buku.kode}">Hapus</button>
+                </td>
+            `;
+        });
+    }
+
+    
+    function renderTabelRiwayatPinjam() {
+        tabelRiwayatPinjamBody.innerHTML = '';
+        if (riwayatPinjam.length === 0) {
+            
+            tabelRiwayatPinjamBody.innerHTML = '<tr><td colspan="4">Belum ada data peminjaman.</td></tr>';
+            return;
+        }
+        riwayatPinjam.forEach((item, index) => {
+            const row = tabelRiwayatPinjamBody.insertRow();
+            row.innerHTML = `
+                <td>${item.kode}</td>
+                <td>${item.judul}</td>
+                <td>${item.namaPeminjam}</td>
+                <td>
+                    <button class="btn btn-danger btn-hapus-pinjam" data-index="${index}">Hapus</button>
+                </td>
+            `;
+        });
+    }
+
+    
+    function renderTabelRiwayatKembali() {
+        tabelRiwayatKembaliBody.innerHTML = '';
+        if (riwayatKembali.length === 0) {
+           
+            tabelRiwayatKembaliBody.innerHTML = '<tr><td colspan="5">Belum ada data pengembalian.</td></tr>';
+            return;
+        }
+        riwayatKembali.forEach((item, index) => {
+            const row = tabelRiwayatKembaliBody.insertRow();
+            row.innerHTML = `
+                <td>${item.kode}</td>
+                <td>${item.judul}</td>
+                <td>${item.hariTerlambat}</td>
+                <td>${item.denda}</td>
+                <td>
+                    <button class="btn btn-danger btn-hapus-kembali" data-index="${index}">Hapus</button>
+                </td>
+            `;
+        });
+    }
+
+    
+
+    
+    menuLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('data-target');
+            menuLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+            contentViews.forEach(view => view.classList.remove('active'));
+            document.getElementById(targetId).classList.add('active');
+        });
+    });
+
+    
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetTab = btn.getAttribute('data-tab');
+            const parentView = btn.closest('.content-view');
+            parentView.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            parentView.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            parentView.querySelector(`#${targetTab}`).classList.add('active');
+        });
+    });
+
+    
+    tabelBukuBody.addEventListener('click', (e) => {
+        if (e.target.classList.contains('btn-hapus')) {
+            const kodeBuku = e.target.getAttribute('data-kode');
+            const isConfirmed = confirm(`Apakah Anda yakin ingin menghapus buku dengan kode ${kodeBuku}?`);
+            if (isConfirmed) {
+                daftarBuku = daftarBuku.filter(buku => buku.kode !== kodeBuku);
+                simpanData();
+                renderTabelBuku();
+                showNotification(`Buku dengan kode ${kodeBuku} berhasil dihapus.`);
+            }
+        }
+    });
+
+   
+    tabelRiwayatPinjamBody.addEventListener('click', (e) => {
+        if (e.target.classList.contains('btn-hapus-pinjam')) {
+            const index = parseInt(e.target.getAttribute('data-index'));
+            const isConfirmed = confirm('Apakah Anda yakin ingin menghapus riwayat peminjaman ini?');
+            if (isConfirmed) {
+                riwayatPinjam.splice(index, 1); 
+                simpanData();
+                renderTabelRiwayatPinjam();
+                showNotification('Riwayat peminjaman berhasil dihapus.');
+            }
+        }
+    });
+
+   
+    tabelRiwayatKembaliBody.addEventListener('click', (e) => {
+        if (e.target.classList.contains('btn-hapus-kembali')) {
+            const index = parseInt(e.target.getAttribute('data-index'));
+            const isConfirmed = confirm('Apakah Anda yakin ingin menghapus riwayat pengembalian ini?');
+            if (isConfirmed) {
+                riwayatKembali.splice(index, 1); 
+                simpanData();
+                renderTabelRiwayatKembali();
+                showNotification('Riwayat pengembalian berhasil dihapus.');
+            }
+        }
+    });
+
+    
+
+    formTambahBuku.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const bukuBaru = {
+            kode: document.getElementById('kode-buku').value,
+            judul: document.getElementById('judul-buku').value,
+            pengarang: document.getElementById('pengarang-buku').value,
+            stok: parseInt(document.getElementById('stok-buku').value),
+            dipinjam: 0,
+            namaPeminjam: ''
+        };
+        daftarBuku.push(bukuBaru);
+        simpanData();
+        renderTabelBuku();
+        formTambahBuku.reset();
+        showNotification('Buku berhasil ditambahkan!');
+    });
+
+    formPinjamBuku.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const kode = document.getElementById('kode-pinjam').value;
+        const namaPeminjam = document.getElementById('nama-peminjam').value;
+        const bukuIndex = daftarBuku.findIndex(b => b.kode === kode);
+
+        if (bukuIndex === -1) {
+            showNotification('Buku tidak ditemukan.', 'error');
+        } else if (daftarBuku[bukuIndex].stok === 0) {
+            showNotification('Stok buku habis.', 'error');
+        } else {
+            daftarBuku[bukuIndex].stok--;
+            daftarBuku[bukuIndex].dipinjam = 1;
+            daftarBuku[bukuIndex].namaPeminjam = namaPeminjam;
+
+            riwayatPinjam.push({
+                kode: daftarBuku[bukuIndex].kode,
+                judul: daftarBuku[bukuIndex].judul,
+                namaPeminjam: namaPeminjam
+            });
+
+            simpanData();
+            renderTabelBuku();
+            renderTabelRiwayatPinjam();
+            formPinjamBuku.reset();
+            showNotification('Peminjaman berhasil dicatat!');
+        }
+    });
+
+    formKembalikanBuku.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const kode = document.getElementById('kode-kembali').value;
+        const hariTerlambat = parseInt(document.getElementById('hari-terlambat').value);
+        const denda = hariTerlambat * 100;
+        const bukuIndex = daftarBuku.findIndex(b => b.kode === kode);
+
+        if (bukuIndex === -1) {
+            showNotification('Buku tidak ditemukan.', 'error');
+        } else {
+            daftarBuku[bukuIndex].stok++;
+            daftarBuku[bukuIndex].dipinjam = 0;
+            daftarBuku[bukuIndex].namaPeminjam = '';
+
+            riwayatKembali.push({
+                kode: daftarBuku[bukuIndex].kode,
+                judul: daftarBuku[bukuIndex].judul,
+                hariTerlambat: hariTerlambat,
+                denda: denda
+            });
+
+            simpanData();
+            renderTabelBuku();
+            renderTabelRiwayatKembali();
+            formKembalikanBuku.reset();
+            document.getElementById('hari-terlambat').value = '0';
+            showNotification(`Pengembalian berhasil! Denda: Rp ${denda}`);
+        }
+    });
+
+    
+    renderTabelBuku();
+    renderTabelRiwayatPinjam();
+    renderTabelRiwayatKembali();
+});
+    </script>
+</body>
+</html>
